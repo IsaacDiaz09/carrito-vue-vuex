@@ -7,7 +7,9 @@ export type State = {
   cart: Product[]
 }
 
-const state: State = { products: [], cart: [] };
+const state: State = {
+  products: [], cart: []
+};
 
 export const key: InjectionKey<Store<State>> = Symbol();
 
@@ -21,9 +23,6 @@ export const store = createStore<State>({
     setCart(state: State, cart: Product[]): void {
       state.cart = cart;
     },
-    addToCart(state: State, prod: Product): void {
-      state.cart.push(prod);
-    },
   },
   actions: {
     async fetchData({ commit: Commit }): Promise<void> {
@@ -36,16 +35,25 @@ export const store = createStore<State>({
       }
     },
     addCartDetail({ commit: Commit }, prod: Product): void {
-      const alreadyExist: boolean = state.cart.indexOf(prod) > 0;
-      let quantity = 1;
 
-      if (alreadyExist) {
-        quantity++;
-        const clone = [...state.cart];
-        clone[clone.indexOf(prod)] = { ...prod, quantity };
+      let current: Product[] | Product = state.cart.filter(current => current.id === prod.id);
+      const exist: boolean = current.length === 1;
+      // clonar estado
+      const clone: Product[] = [...state.cart];
+
+      if (exist) {
+        // producto actual en el carrito
+        current = current[0];
+        current.quantity += 1;
+        // reemplazar producto con cantidad actualizada
+        const currentIndex = state.cart.indexOf(current)
+        clone[currentIndex] = new Product(current.id, current.price, current.title, current.image, current.quantity);
+        // commit
         Commit("setCart", clone);
       } else {
-        Commit("addToCart", { ...prod, quantity });
+        // commit producto cantidad por defecto (1)
+        clone.push(new Product(prod.id, prod.price, prod.title, prod.image));
+        Commit("setCart", clone);
       }
     }
   }
