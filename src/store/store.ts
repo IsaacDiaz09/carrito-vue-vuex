@@ -1,5 +1,5 @@
-import { Product } from "@/model/product.entity";
-import { InjectionKey } from "vue";
+import { Product } from '@/model/product.entity';
+import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
 export type State = {
@@ -14,7 +14,7 @@ const state: State = {
 export const key: InjectionKey<Store<State>> = Symbol();
 
 // export store
-export const store = createStore<State>({
+export const myStore = createStore<State>({
   state,
   mutations: {
     setProducts(state: State, prods: Product[]): void {
@@ -27,9 +27,9 @@ export const store = createStore<State>({
   actions: {
     async fetchData({ commit: Commit }): Promise<void> {
       try {
-        const res = await fetch("db.json");
+        const res = await fetch('db.json');
         const data = await res.json() as Product[];
-        Commit("setProducts", data);
+        Commit('setProducts', data);
       } catch (error) {
         console.error(error);
       }
@@ -49,14 +49,32 @@ export const store = createStore<State>({
         const currentIndex = state.cart.indexOf(current)
         clone[currentIndex] = new Product(current.id, current.price, current.title, current.image, current.quantity);
         // commit
-        Commit("setCart", clone);
+        Commit('setCart', clone);
       } else {
         // commit producto cantidad por defecto (1)
         clone.push(new Product(prod.id, prod.price, prod.title, prod.image));
-        Commit("setCart", clone);
+        Commit('setCart', clone);
       }
+    },
+    setCartDetailQuantity({ commit: Commit }, prod: Product): void {
+      let clone: Product[] = [...state.cart];
+
+      // verificar prod cantidad no negativa
+      if (prod.quantity === 0) {
+        // eliminar prod del carrito
+        clone = state.cart.filter((current) => prod.id !== current.id);
+      } else {
+        // clonar y modificar
+        const prodIndex = clone.indexOf(prod);
+        clone[prodIndex] = prod;
+      }
+      // llamado a commit
+      Commit('setCart', clone);
+    },
+    cleanCart({ commit: Commit }): void {
+      Commit('setCart', []);
     }
   }
 });
 
-export const useStore = (): Store<State> => baseUseStore(key);
+export const store: Store<State> = baseUseStore(key);

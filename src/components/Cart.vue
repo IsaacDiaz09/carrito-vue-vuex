@@ -1,6 +1,6 @@
 <template>
-    <div class="cart">
-        <table class="table table-sm table-hover">
+    <div class='cart'>
+        <table class='table table-sm table-hover'>
             <thead>
                 <tr>
                     <th>#</th>
@@ -11,19 +11,19 @@
                 </tr>
             </thead>
             <tbody>
-                <slot name="body"></slot>
+                <slot name='body'></slot>
             </tbody>
             <tfoot>
-                <slot name="footer"></slot>
+                <slot name='footer'></slot>
             </tfoot>
         </table>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang='ts'>
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: "cart"
+    name: 'cart'
 });
 </script>

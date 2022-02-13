@@ -1,11 +1,11 @@
 <template>
     <tr>
-        <th scope="row">{{ id }}</th>
+        <th scope='row'>{{ id }}</th>
         <td>{{ itemTitle }}</td>
         <td>{{ quantity }}</td>
         <td>
-            <button class="btn btn-primary btn-sm" @click="increase">+</button>&nbsp;|&nbsp;
-            <button class="btn btn-danger btn-sm" @click="decrease">-</button>
+            <button class='btn btn-primary btn-sm' @click='increase'>+</button>&nbsp;|&nbsp;
+            <button class='btn btn-danger btn-sm' @click='decrease'>-</button>
         </td>
         <td>
             $
@@ -13,10 +13,10 @@
         </td>
     </tr>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang='ts'>
+import { defineComponent } from 'vue';
 export default defineComponent({
-    name: "cart-item",
+    name: 'cart-item',
     props: {
         id: {
             type: Number,
@@ -37,10 +37,10 @@ export default defineComponent({
     },
     methods: {
         increase(): void { 
-            this.$emit("increase") 
+            this.$emit('increase');
         },
         decrease(): void { 
-            this.$emit("decrease") 
+            this.$emit('decrease');
         },
     }
 });
